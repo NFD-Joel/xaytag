@@ -15,12 +15,20 @@ const isExternal = /^https?:\/\//.test(url);
 <a
   class="card"
   href={url}
+  data-url={url}
   target={isExternal ? '_blank' : undefined}
   rel={isExternal ? 'noopener noreferrer' : undefined}
 >
   <div class="top">
     {icon && <span class="icon" aria-hidden="true">{icon}</span>}
-    {tag && <span class="tag">{tag}</span>}
+    <span class="meta">
+      {tag && <span class="tag">{tag}</span>}
+      <span
+        class="dot"
+        data-status="checking"
+        title="Checking…"
+        aria-label="Checking status"></span>
+    </span>
   </div>
   <h2 class="title">{title}</h2>
   <p class="desc">{description}</p>
@@ -62,6 +70,44 @@ const isExternal = /^https?:\/\//.test(url);
   .icon {
     font-size: 1.5rem;
     line-height: 1;
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex: none;
+    background: var(--warn);
+  }
+
+  .dot[data-status='checking'] {
+    background: var(--warn);
+    animation: pulse 1.1s ease-in-out infinite;
+  }
+
+  .dot[data-status='online'] {
+    background: var(--ok);
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+  }
+
+  .dot[data-status='offline'] {
+    background: var(--bad);
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
+      opacity: 1;
+    }
   }
 
   .tag {
