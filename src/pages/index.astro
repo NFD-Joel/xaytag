@@ -1,0 +1,64 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import { projects } from '../data/projects';
+---
+
+<Layout>
+  <main>
+    <header class="head">
+      <h1>xaytag</h1>
+      <p class="subtitle">Projects, sites &amp; webapps — all in one place.</p>
+    </header>
+
+    <section class="grid">
+      {projects.map((project) => <Card project={project} />)}
+    </section>
+
+    <footer class="foot">
+      <span>{projects.length} project{projects.length === 1 ? '' : 's'}</span>
+      <span>xaytag.com</span>
+    </footer>
+  </main>
+</Layout>
+
+<style>
+  main {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: clamp(2rem, 6vw, 4.5rem) clamp(1rem, 4vw, 2rem) 3rem;
+  }
+
+  .head {
+    margin-bottom: 2.2rem;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    margin: 0.5rem 0 0;
+    color: var(--text-dim);
+    font-size: 1rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2.5rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 0.8rem;
+  }
+</style>

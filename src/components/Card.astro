@@ -1,0 +1,90 @@
+---
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const { title, description, url, icon, tag } = project;
+
+// Open external links in a new tab; keep same-origin links in place.
+const isExternal = /^https?:\/\//.test(url);
+---
+
+<a
+  class="card"
+  href={url}
+  target={isExternal ? '_blank' : undefined}
+  rel={isExternal ? 'noopener noreferrer' : undefined}
+>
+  <div class="top">
+    {icon && <span class="icon" aria-hidden="true">{icon}</span>}
+    {tag && <span class="tag">{tag}</span>}
+  </div>
+  <h2 class="title">{title}</h2>
+  <p class="desc">{description}</p>
+</a>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1.1rem 1.2rem 1.3rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition:
+      transform 0.15s ease,
+      border-color 0.15s ease,
+      background 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .card:hover,
+  .card:focus-visible {
+    transform: translateY(-3px);
+    background: var(--bg-card-hover);
+    border-color: var(--border-hover);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    outline: none;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    min-height: 1.6rem;
+  }
+
+  .icon {
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+
+  .tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(110, 168, 254, 0.12);
+    border: 1px solid rgba(110, 168, 254, 0.25);
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+  }
+
+  .title {
+    margin: 0.2rem 0 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  .desc {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: var(--text-dim);
+  }
+</style>
