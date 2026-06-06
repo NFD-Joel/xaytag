@@ -15,17 +15,17 @@ export interface Project {
 // nothing else needs to change.
 export const projects: Project[] = [
   {
-    title: 'Example App',
-    description: 'Replace these with your real projects.',
-    url: 'https://example.com',
-    icon: '🚀',
-    tag: 'webapp',
+    title: 'Agua es Vida',
+    description: 'Filtración de agua por ósmosis inversa en Paraguay.',
+    url: 'https://aguaesvida.com.py',
+    icon: '💧',
+    tag: 'site',
   },
   {
-    title: 'Another Site',
-    description: 'Each entry becomes one card in the grid.',
-    url: 'https://example.org',
-    icon: '🌐',
-    tag: 'site',
+    title: '3D-Druck Preisrechner',
+    description: 'Verkaufspreis für 3D-Drucke in Guaraní berechnen.',
+    url: 'https://nfd-joel.github.io/nfdprinting/',
+    icon: '🖨️',
+    tag: 'tool',
   },
 ];
