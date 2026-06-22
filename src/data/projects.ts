@@ -28,4 +28,11 @@ export const projects: Project[] = [
     icon: '🖨️',
     tag: 'tool',
   },
+  {
+    title: 'Informes',
+    description: 'Spanische Schul-Informes — lesen & abhaken.',
+    url: 'https://informes.xaytag.com',
+    icon: '📝',
+    tag: 'school',
+  },
 ];
