@@ -1,0 +1,117 @@
+---
+// Sharp, minimal hero — wordmark, one strong line, a quiet subhead.
+---
+
+<section class="hero">
+  <p class="kicker" data-reveal>xaytag</p>
+  <h1 class="headline" data-reveal>
+    I build things<br />that <span class="grad">actually run.</span>
+  </h1>
+  <p class="sub" data-reveal>
+    Web apps, small tools, and a self-hosted homelab — designed, built and
+    deployed end to end. A few of them are below.
+  </p>
+  <a class="cue" href="#work" data-reveal aria-label="Jump to projects">
+    <span>See the work</span>
+    <span class="chev" aria-hidden="true">↓</span>
+  </a>
+</section>
+
+<style>
+  .hero {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: clamp(3.5rem, 12vh, 7rem) clamp(1rem, 4vw, 2rem)
+      clamp(2rem, 6vh, 3.5rem);
+  }
+
+  .kicker {
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    color: var(--accent);
+  }
+
+  .headline {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.4rem, 8vw, 4.6rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+  }
+
+  .grad {
+    background: linear-gradient(100deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-size: 200% auto;
+    animation: shimmer 6s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%,
+    100% {
+      background-position: 0% center;
+    }
+    50% {
+      background-position: 100% center;
+    }
+  }
+
+  .sub {
+    margin: 1.4rem 0 0;
+    max-width: 48ch;
+    font-size: clamp(1rem, 2.2vw, 1.15rem);
+    line-height: 1.6;
+    color: var(--text-dim);
+  }
+
+  .cue {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2.2rem;
+    padding: 0.6rem 1.1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .cue:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .chev {
+    animation: bob 1.8s ease-in-out infinite;
+  }
+
+  @keyframes bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(3px);
+    }
+  }
+
+  /* Stagger the reveal of the hero lines. */
+  .headline {
+    transition-delay: 0.08s;
+  }
+  .sub {
+    transition-delay: 0.16s;
+  }
+  .cue {
+    transition-delay: 0.24s;
+  }
+</style>
