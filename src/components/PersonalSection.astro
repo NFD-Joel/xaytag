@@ -1,0 +1,226 @@
+---
+import Card from './Card.astro';
+import { projects, PERSONAL_PASSPHRASE } from '../data/projects';
+
+const personal = projects.filter((p) => p.personal);
+---
+
+<section class="personal" id="personal" data-passphrase={PERSONAL_PASSPHRASE}>
+  <div class="head" data-reveal>
+    <h2 class="title">
+      <span class="lock" aria-hidden="true">🔒</span> Personal
+    </h2>
+    <p class="note">Private tools. Enter the passphrase to reveal.</p>
+  </div>
+
+  <!-- Locked: shown until unlocked -->
+  <form class="gate" id="gate" data-reveal>
+    <input
+      class="field"
+      id="gate-input"
+      type="password"
+      placeholder="Passphrase"
+      aria-label="Passphrase"
+      autocomplete="off"
+    />
+    <button class="unlock" type="submit">Unlock</button>
+    <p class="err" id="gate-err" hidden>Wrong passphrase — try again.</p>
+  </form>
+
+  <!-- Unlocked: the cards + a re-lock control -->
+  <div class="vault" id="vault" hidden>
+    <div class="grid">
+      {personal.map((project) => <Card project={project} />)}
+    </div>
+    <button class="relock" id="relock" type="button">Lock again</button>
+  </div>
+</section>
+
+<script>
+  const section = document.getElementById('personal');
+  const gate = document.getElementById('gate') as HTMLFormElement | null;
+  const input = document.getElementById('gate-input') as HTMLInputElement | null;
+  const err = document.getElementById('gate-err');
+  const vault = document.getElementById('vault');
+  const relock = document.getElementById('relock');
+
+  const KEY = 'xaytag-unlocked';
+  const pass = section?.dataset.passphrase ?? '';
+
+  function reveal() {
+    if (gate) gate.hidden = true;
+    if (vault) {
+      vault.hidden = false;
+      // The cards start hidden for scroll-reveal, but they never intersect
+      // while the vault is closed — show them straight away on unlock.
+      vault
+        .querySelectorAll('[data-reveal]')
+        .forEach((el) => el.classList.add('in'));
+    }
+  }
+
+  function hide() {
+    if (vault) vault.hidden = true;
+    if (gate) gate.hidden = false;
+    if (input) input.value = '';
+  }
+
+  // Auto-unlock if previously unlocked on this device.
+  try {
+    if (localStorage.getItem(KEY) === '1') reveal();
+  } catch (_) {}
+
+  gate?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if ((input?.value ?? '') === pass) {
+      try {
+        localStorage.setItem(KEY, '1');
+      } catch (_) {}
+      if (err) err.hidden = true;
+      reveal();
+    } else {
+      if (err) err.hidden = false;
+      gate.classList.remove('shake');
+      void gate.offsetWidth; // restart animation
+      gate.classList.add('shake');
+    }
+  });
+
+  relock?.addEventListener('click', () => {
+    try {
+      localStorage.removeItem(KEY);
+    } catch (_) {}
+    hide();
+  });
+</script>
+
+<style>
+  .personal {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: clamp(2rem, 6vh, 3.5rem) clamp(1rem, 4vw, 2rem);
+    scroll-margin-top: 70px;
+  }
+
+  .head {
+    margin-bottom: 1.4rem;
+  }
+
+  .title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .lock {
+    font-size: 1.1rem;
+  }
+
+  .note {
+    margin: 0.4rem 0 0;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+
+  /* `display: flex` would otherwise override the [hidden] attribute, leaving
+     the form on screen after unlock. */
+  .gate[hidden] {
+    display: none;
+  }
+
+  .gate {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.4rem;
+    background: var(--bg-card);
+    border: 1px dashed var(--border-hover);
+    border-radius: var(--radius);
+  }
+
+  .field {
+    flex: 1;
+    min-width: 180px;
+    padding: 0.6rem 0.9rem;
+    font: inherit;
+    font-size: 0.92rem;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .field:focus {
+    border-color: var(--accent);
+  }
+
+  .unlock {
+    flex: none;
+    padding: 0.6rem 1.3rem;
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: #fff;
+    background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  .unlock:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+  }
+
+  .err {
+    flex-basis: 100%;
+    margin: 0;
+    color: var(--bad);
+    font-size: 0.82rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .relock {
+    margin-top: 1.2rem;
+    padding: 0.45rem 0.95rem;
+    font: inherit;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .relock:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+  }
+
+  .shake {
+    animation: shake 0.4s ease;
+  }
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    20%,
+    60% {
+      transform: translateX(-6px);
+    }
+    40%,
+    80% {
+      transform: translateX(6px);
+    }
+  }
+</style>

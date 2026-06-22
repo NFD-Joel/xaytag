@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#15151d"/>
+      <stop offset="1" stop-color="#0d0d10"/>
+    </linearGradient>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6ea8fe"/>
+      <stop offset="1" stop-color="#c084fc"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1020" cy="120" r="320" fill="#6ea8fe" opacity="0.10"/>
+  <text x="90" y="250" font-family="Space Grotesk, system-ui, sans-serif" font-size="34"
+        letter-spacing="14" fill="#6ea8fe" font-weight="600">XAYTAG</text>
+  <text x="86" y="380" font-family="Space Grotesk, system-ui, sans-serif" font-size="96"
+        fill="#e6e6ea" font-weight="700">I build things</text>
+  <text x="86" y="490" font-family="Space Grotesk, system-ui, sans-serif" font-size="96"
+        font-weight="700">
+    <tspan fill="#e6e6ea">that </tspan><tspan fill="url(#grad)">actually run.</tspan>
+  </text>
+  <text x="90" y="565" font-family="system-ui, sans-serif" font-size="30" fill="#9a9aa6">
+    Web apps · tools · a self-hosted homelab
+  </text>
+</svg>
