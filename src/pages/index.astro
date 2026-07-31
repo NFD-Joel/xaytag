@@ -40,53 +40,75 @@ const year = new Date().getFullYear();
   </main>
 </Layout>
 
-<script>
-  // --- Scroll-reveal ---
-  const revealables = document.querySelectorAll<HTMLElement>('[data-reveal]');
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (reduce || !('IntersectionObserver' in window)) {
-    revealables.forEach((el) => el.classList.add('in'));
-  } else {
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in');
-            io.unobserve(entry.target);
-          }
-        }
-      },
-      { rootMargin: '0px 0px -10% 0px', threshold: 0.1 }
+<!-- Inline classic script (is:inline) rather than a bundled module: a module
+     that fails to execute (browser policy, extension, parse error) would leave
+     every [data-reveal] element stuck at opacity:0 and the page blank. This
+     runs defensively — any failure reveals everything, and a timeout is a
+     final failsafe so content is never left hidden. -->
+<script is:inline>
+  (function () {
+    var els = Array.prototype.slice.call(
+      document.querySelectorAll('[data-reveal]')
     );
-    revealables.forEach((el) => io.observe(el));
-  }
+    function revealAll() {
+      for (var i = 0; i < els.length; i++) els[i].classList.add('in');
+    }
 
-  // --- Best-effort reachability probe (no-cors; not real monitoring) ---
-  function setStatus(dot: HTMLElement, state: 'online' | 'offline') {
-    dot.dataset.status = state;
-    const label = state === 'online' ? 'Online' : 'Unreachable';
-    dot.title = label;
-    dot.setAttribute('aria-label', label);
-  }
+    // --- Scroll-reveal ---
+    try {
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce || !('IntersectionObserver' in window)) {
+        revealAll();
+      } else {
+        var io = new IntersectionObserver(
+          function (entries) {
+            for (var i = 0; i < entries.length; i++) {
+              if (entries[i].isIntersecting) {
+                entries[i].target.classList.add('in');
+                io.unobserve(entries[i].target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.1 }
+        );
+        for (var j = 0; j < els.length; j++) io.observe(els[j]);
+        // Failsafe: never leave content hidden if the observer misfires.
+        setTimeout(revealAll, 3000);
+      }
+    } catch (e) {
+      revealAll();
+    }
 
-  function probe(card: HTMLElement) {
-    const url = card.dataset.url;
-    const dot = card.querySelector<HTMLElement>('.dot');
-    if (!url || !dot) return;
-
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 6000);
-
-    fetch(url, { mode: 'no-cors', signal: ctrl.signal })
-      .then(() => setStatus(dot, 'online'))
-      .catch(() => setStatus(dot, 'offline'))
-      .finally(() => clearTimeout(timer));
-  }
-
-  document
-    .querySelectorAll<HTMLElement>('.card')
-    .forEach((card) => probe(card));
+    // --- Best-effort reachability probe (no-cors; not real monitoring) ---
+    function setStatus(dot, state) {
+      dot.dataset.status = state;
+      var label = state === 'online' ? 'Online' : 'Unreachable';
+      dot.title = label;
+      dot.setAttribute('aria-label', label);
+    }
+    try {
+      var cards = document.querySelectorAll('.card');
+      Array.prototype.forEach.call(cards, function (card) {
+        var url = card.dataset.url;
+        var dot = card.querySelector('.dot');
+        if (!url || !dot) return;
+        var ctrl = new AbortController();
+        var timer = setTimeout(function () {
+          ctrl.abort();
+        }, 6000);
+        fetch(url, { mode: 'no-cors', signal: ctrl.signal })
+          .then(function () {
+            setStatus(dot, 'online');
+          })
+          .catch(function () {
+            setStatus(dot, 'offline');
+          })
+          .finally(function () {
+            clearTimeout(timer);
+          });
+      });
+    } catch (e) {}
+  })();
 </script>
 
 <style>
