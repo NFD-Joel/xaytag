@@ -72,6 +72,16 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    title: 'Bobinado',
+    description:
+      'Calculadora de rebobinado de motores: iguala la sección de cobre de un bobinado con los alambres disponibles.',
+    url: 'https://bobinado.xaytag.com',
+    icon: '🔌',
+    tag: 'tool',
+    tech: ['JavaScript', 'PWA'],
+    year: '2026',
+  },
+  {
     title: '3D-Druck Preisrechner',
     description: 'Verkaufspreis für 3D-Drucke in Guaraní berechnen.',
     url: 'https://nfd-joel.github.io/nfdprinting/',
