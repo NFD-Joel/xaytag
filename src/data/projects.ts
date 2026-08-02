@@ -52,13 +52,14 @@ export const projects: Project[] = [
     year: '2026',
   },
   {
-    title: 'Homelab',
+    title: 'Bobinado',
     description:
-      'Self-hosted Proxmox stack: TrueNAS storage, pfSense + AdGuard, Docker via Portainer, Cloudflare tunnels and Tailscale.',
-    url: 'https://github.com/NFD-Joel',
-    icon: '🧰',
-    tag: 'infrastructure',
-    tech: ['Proxmox', 'Docker', 'TrueNAS', 'pfSense'],
+      'Calculadora de rebobinado de motores: iguala la sección de cobre de un bobinado con los alambres disponibles.',
+    url: 'https://bobinado.xaytag.com',
+    icon: '🔌',
+    tag: 'tool',
+    tech: ['JavaScript', 'PWA'],
+    year: '2026',
   },
   {
     title: 'mipoco',
@@ -70,16 +71,6 @@ export const projects: Project[] = [
     tech: ['Rust', 'TUI', 'ConPTY'],
     year: '2026',
     featured: true,
-  },
-  {
-    title: 'Bobinado',
-    description:
-      'Calculadora de rebobinado de motores: iguala la sección de cobre de un bobinado con los alambres disponibles.',
-    url: 'https://bobinado.xaytag.com',
-    icon: '🔌',
-    tag: 'tool',
-    tech: ['JavaScript', 'PWA'],
-    year: '2026',
   },
   {
     title: '3D-Druck Preisrechner',
