@@ -98,4 +98,15 @@ export const projects: Project[] = [
     tag: 'school',
     personal: true,
   },
+  {
+    title: 'AEV — Staging',
+    description:
+      'Vorschau-/Testversion der Agua-es-Vida-Seite vor dem offiziellen Deploy.',
+    url: 'https://aev.xaytag.com',
+    icon: '🧪',
+    tag: 'staging',
+    tech: ['Web', 'GitHub Pages'],
+    year: '2026',
+    personal: true,
+  },
 ];
