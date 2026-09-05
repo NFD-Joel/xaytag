@@ -1,0 +1,51 @@
+name: Cert & DNS health
+
+on:
+  schedule:
+    - cron: '0 12 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: DNS A records point at GitHub Pages
+        run: |
+          expected=$(printf '%s\n' 185.199.108.153 185.199.109.153 185.199.110.153 185.199.111.153 | sort)
+          actual=$(curl -sf -H 'Accept: application/dns-json' \
+            'https://dns.google/resolve?name=xaytag.com&type=A' \
+            | jq -r '.Answer[]? | select(.type == 1) | .data' | sort)
+          echo "expected:"; echo "$expected"
+          echo "actual:";   echo "$actual"
+          if [ "$expected" != "$actual" ]; then
+            echo "::error::xaytag.com A records drifted from the four GitHub Pages IPs."
+            echo "A stray or missing record breaks Let's Encrypt validation and the cert will silently fail to renew."
+            exit 1
+          fi
+
+      - name: GitHub Pages certificate is approved
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          state=$(gh api repos/${{ github.repository }}/pages --jq '.https_certificate.state')
+          enforced=$(gh api repos/${{ github.repository }}/pages --jq '.https_enforced')
+          echo "cert state: $state / https_enforced: $enforced"
+          [ "$state" = "approved" ] || { echo "::error::Pages cert state is '$state', expected 'approved'."; exit 1; }
+          [ "$enforced" = "true" ] || { echo "::error::Enforce HTTPS is off."; exit 1; }
+
+      - name: Served certificate has >21 days left
+        run: |
+          for host in xaytag.com www.xaytag.com; do
+            end=$(echo | openssl s_client -connect "$host:443" -servername "$host" 2>/dev/null \
+              | openssl x509 -noout -enddate | cut -d= -f2)
+            days=$(( ( $(date -d "$end" +%s) - $(date +%s) ) / 86400 ))
+            echo "$host expires $end ($days days)"
+            if [ "$days" -lt 21 ]; then
+              echo "::error::$host cert expires in $days days — auto-renewal (due ~30 days out) has not run."
+              exit 1
+            fi
+          done
