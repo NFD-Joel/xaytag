@@ -1,8 +1,30 @@
 ---
 import Card from './Card.astro';
-import { projects, PERSONAL_PASSPHRASE } from '../data/projects';
+import {
+  projects,
+  PERSONAL_PASSPHRASE,
+  PERSONAL_DEFAULT_CATEGORY,
+  PERSONAL_CATEGORY_ORDER,
+} from '../data/projects';
 
 const personal = projects.filter((p) => p.personal);
+
+// Group the locked cards by category, keeping PERSONAL_CATEGORY_ORDER first
+// and appending any category that isn't listed there.
+const byCategory = new Map<string, typeof personal>();
+for (const project of personal) {
+  const key = project.category ?? PERSONAL_DEFAULT_CATEGORY;
+  const bucket = byCategory.get(key);
+  if (bucket) bucket.push(project);
+  else byCategory.set(key, [project]);
+}
+
+const groups = [
+  ...PERSONAL_CATEGORY_ORDER.filter((c) => byCategory.has(c)),
+  ...[...byCategory.keys()].filter(
+    (c) => !PERSONAL_CATEGORY_ORDER.includes(c)
+  ),
+].map((name) => ({ name, items: byCategory.get(name)! }));
 ---
 
 <section class="personal" id="personal" data-passphrase={PERSONAL_PASSPHRASE}>
@@ -29,9 +51,18 @@ const personal = projects.filter((p) => p.personal);
 
   <!-- Unlocked: the cards + a re-lock control -->
   <div class="vault" id="vault" hidden>
-    <div class="grid">
-      {personal.map((project) => <Card project={project} />)}
-    </div>
+    {
+      groups.map((group) => (
+        <div class="group">
+          <h3 class="group-title" data-reveal>{group.name}</h3>
+          <div class="grid">
+            {group.items.map((project) => (
+              <Card project={project} />
+            ))}
+          </div>
+        </div>
+      ))
+    }
     <button class="relock" id="relock" type="button">Lock again</button>
   </div>
 </section>
@@ -181,6 +212,20 @@ const personal = projects.filter((p) => p.personal);
     margin: 0;
     color: var(--bad);
     font-size: 0.82rem;
+  }
+
+  .group + .group {
+    margin-top: 1.8rem;
+  }
+
+  .group-title {
+    margin: 0 0 0.8rem;
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
   }
 
   .grid {

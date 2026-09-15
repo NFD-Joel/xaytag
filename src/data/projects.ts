@@ -19,7 +19,18 @@ export interface Project {
   featured?: boolean;
   /** Belongs in the locked Personal section instead of the public grid. */
   personal?: boolean;
+  /** Group heading inside the Personal section. Defaults to PERSONAL_DEFAULT_CATEGORY. */
+  category?: string;
 }
+
+// Category heading used for personal cards that don't name one, and the
+// order the groups are rendered in. A category listed here but unused is
+// simply skipped; one used but not listed is appended at the end.
+export const PERSONAL_DEFAULT_CATEGORY = 'Tools & Seiten';
+export const PERSONAL_CATEGORY_ORDER = [
+  PERSONAL_DEFAULT_CATEGORY,
+  'Recherche & Dokumente',
+];
 
 // Passphrase for the locked Personal section. This is a static site, so the
 // gate is client-side only — it hides the cards from casual visitors, it is
@@ -99,5 +110,16 @@ export const projects: Project[] = [
     tech: ['Web', 'GitHub Pages'],
     year: '2026',
     personal: true,
+  },
+  {
+    title: 'Krankenversicherung PY',
+    description:
+      'Recherche: private Krankenversicherungen in Paraguay mit Kostenerstattung (Factura einreichen) statt Ein-Krankenhaus-Netz — für den Chaco.',
+    url: '/versicherung/',
+    icon: '🏥',
+    tag: 'recherche',
+    year: '2026',
+    personal: true,
+    category: 'Recherche & Dokumente',
   },
 ];
