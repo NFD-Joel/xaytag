@@ -3,10 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
 import Hero from '../components/Hero.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
-import PersonalSection from '../components/PersonalSection.astro';
-import { projects } from '../data/projects';
+import { projects, DASHBOARD_URL } from '../data/projects';
 
-const publicProjects = projects.filter((p) => !p.personal);
 const year = new Date().getFullYear();
 ---
 
@@ -15,7 +13,7 @@ const year = new Date().getFullYear();
     <a class="logo" href="#top">xaytag</a>
     <nav class="nav">
       <a href="#work">Work</a>
-      <a href="#personal">Personal</a>
+      <a href={DASHBOARD_URL}>Dashboard</a>
     </nav>
     <ThemeToggle />
   </header>
@@ -27,11 +25,9 @@ const year = new Date().getFullYear();
     <section class="work" id="work">
       <h2 class="section-title" data-reveal>Selected work</h2>
       <div class="grid">
-        {publicProjects.map((project) => <Card project={project} />)}
+        {projects.map((project) => <Card project={project} />)}
       </div>
     </section>
-
-    <PersonalSection />
 
     <footer class="foot">
       <span>© {year} xaytag</span>

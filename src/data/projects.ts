@@ -17,29 +17,14 @@ export interface Project {
   year?: string;
   /** Render larger and first in the public showcase. */
   featured?: boolean;
-  /** Belongs in the locked Personal section instead of the public grid. */
-  personal?: boolean;
-  /** Group heading inside the Personal section. Defaults to PERSONAL_DEFAULT_CATEGORY. */
-  category?: string;
 }
 
-// Category heading used for personal cards that don't name one, and the
-// order the groups are rendered in. A category listed here but unused is
-// simply skipped; one used but not listed is appended at the end.
-export const PERSONAL_DEFAULT_CATEGORY = 'Tools & Seiten';
-export const PERSONAL_CATEGORY_ORDER = [
-  PERSONAL_DEFAULT_CATEGORY,
-  'Recherche & Dokumente',
-];
+// Private tools and documents live behind the login on the dashboard,
+// not here — everything in this repo is public.
+export const DASHBOARD_URL = 'https://dash.xaytag.com';
 
-// Passphrase for the locked Personal section. This is a static site, so the
-// gate is client-side only — it hides the cards from casual visitors, it is
-// not real security. CHANGE THIS to your own word.
-export const PERSONAL_PASSPHRASE = 'CHANGE-ME';
-
-// Single source of truth for the dashboard. Add/remove entries here —
-// nothing else needs to change. Set `personal: true` to move a card behind
-// the passphrase gate.
+// Single source of truth for the public showcase. Add/remove entries here —
+// nothing else needs to change.
 export const projects: Project[] = [
   {
     title: 'Agua es Vida',
@@ -55,7 +40,7 @@ export const projects: Project[] = [
   {
     title: 'xaytag',
     description:
-      'This site — a hand-built Astro portfolio with a passphrase-gated private area, live status checks and a theme switch.',
+      'This site — a hand-built Astro portfolio with live status checks and a theme switch.',
     url: 'https://github.com/NFD-Joel/xaytag',
     icon: '🛰️',
     tag: 'open source',
@@ -82,44 +67,5 @@ export const projects: Project[] = [
     tech: ['Rust', 'TUI', 'ConPTY'],
     year: '2026',
     featured: true,
-  },
-  {
-    title: '3D-Druck Preisrechner',
-    description: 'Verkaufspreis für 3D-Drucke in Guaraní berechnen.',
-    url: 'https://nfd-joel.github.io/nfdprinting/',
-    icon: '🖨️',
-    tag: 'tool',
-    tech: ['JavaScript'],
-    personal: true,
-  },
-  {
-    title: 'Informes',
-    description: 'Spanische Schul-Informes — lesen & abhaken.',
-    url: 'https://informes.xaytag.com',
-    icon: '📝',
-    tag: 'school',
-    personal: true,
-  },
-  {
-    title: 'AEV — Staging',
-    description:
-      'Vorschau-/Testversion der Agua-es-Vida-Seite vor dem offiziellen Deploy.',
-    url: 'https://aev.xaytag.com',
-    icon: '🧪',
-    tag: 'staging',
-    tech: ['Web', 'GitHub Pages'],
-    year: '2026',
-    personal: true,
-  },
-  {
-    title: 'Krankenversicherung PY',
-    description:
-      'Recherche: private Krankenversicherungen in Paraguay mit Kostenerstattung (Factura einreichen) statt Ein-Krankenhaus-Netz — für den Chaco.',
-    url: '/versicherung/',
-    icon: '🏥',
-    tag: 'recherche',
-    year: '2026',
-    personal: true,
-    category: 'Recherche & Dokumente',
   },
 ];
